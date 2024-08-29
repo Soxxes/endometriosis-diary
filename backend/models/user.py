@@ -34,6 +34,12 @@ class User:
         self.birthday = birthday
 
     def save(self):
+        # ensure unique username and email
+        if mongo.db.users.find_one({"username": self.username}):
+            raise ValueError("Username already exists")
+        if mongo.db.users.find_one({"email": self.email}):
+            raise ValueError("Email already exists")
+        
         return mongo.db.users.insert_one({
             "username": self.username,
             "email": self.email,
