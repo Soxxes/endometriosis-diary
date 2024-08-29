@@ -13,6 +13,6 @@ def create_flask_app():
     mongo.init_app(app)
 
     # register Blueprints
-    app.register_blueprint(main)
+    app.register_blueprint(main, url_prefix="/api/users")
 
     return app
