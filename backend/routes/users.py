@@ -10,15 +10,18 @@ users = Blueprint('users', __name__)
 @users.route('/add', methods=['POST'])
 def add_user():
     data = request.json
+    try:
+        validated_data, errors = User.validate(data)
+        if errors:
+            return jsonify({"errors": errors}), 400
+        
+        user = User(**validated_data)
+        user_id = user.save()
 
-    validated_data, errors = User.validate(data)
-    if errors:
-        return jsonify({"errors": errors}), 400
+        return jsonify({"message": "User added", "id": str(user_id)}), 201
     
-    user = User(**validated_data)
-    user_id = user.save()
-
-    return jsonify({"message": "User added", "id": str(user_id)}), 201
+    except ValueError as err:
+        return jsonify({"errors": str(err)}), 400
 
 
 @users.route('/login', methods=['POST'])
