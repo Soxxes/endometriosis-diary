@@ -1,5 +1,5 @@
 from bson.objectid import ObjectId
-from passlib.hash import sha256_crypt
+from werkzeug.security import generate_password_hash, check_password_hash
 from marshmallow import Schema, fields, validate, ValidationError
 from backend.extensions import mongo
 
@@ -27,7 +27,7 @@ class User:
                  birthday):
         self.username = username
         self.email = email
-        self.password = password
+        self.password = generate_password_hash(password)
         self.height = height
         self.weight = weight
         # for age specific data analytics
@@ -37,7 +37,7 @@ class User:
         return mongo.db.users.insert_one({
             "name": self.username,
             "email": self.email,
-            "password": sha256_crypt.encrypt(self.password),
+            "password": self.password,
             # TODO: encrypt ? since sensitive information
             "height": self.height,
             "weight": self.weight,
@@ -50,6 +50,8 @@ class User:
 
     @staticmethod
     def update(user_id, data):
+        if 'password' in data:
+            data['password'] = generate_password_hash(data['password'])
         return mongo.db.users.update_one({"_id": ObjectId(user_id)}, {"$set": data})
 
     @staticmethod
@@ -63,4 +65,8 @@ class User:
             return validated_data, None
         except ValidationError as err:
             return None, err.messages
+        
+    @staticmethod
+    def check_password(stored_password_hash, provided_password):
+        return check_password_hash(stored_password_hash, provided_password)
 
