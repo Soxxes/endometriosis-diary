@@ -35,7 +35,7 @@ class User:
 
     def save(self):
         return mongo.db.users.insert_one({
-            "name": self.username,
+            "username": self.username,
             "email": self.email,
             "password": self.password,
             # TODO: encrypt ? since sensitive information
