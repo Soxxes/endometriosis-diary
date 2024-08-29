@@ -1,5 +1,6 @@
 from flask import Flask
 from backend.extensions import mongo
+from backend.routes import main
 
 
 def create_flask_app():
@@ -10,5 +11,8 @@ def create_flask_app():
 
     # init extensions
     mongo.init_app(app)
+
+    # register Blueprints
+    app.register_blueprint(main)
 
     return app
