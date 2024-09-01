@@ -1,6 +1,6 @@
-from sections.pain_diary import pain_diary
+from sections.pain import pain_entry
 from helpers.auth import check_authentication
 
 
 check_authentication()
-pain_diary()
+pain_entry()
