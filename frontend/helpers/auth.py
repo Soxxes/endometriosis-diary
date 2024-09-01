@@ -32,7 +32,7 @@ def register_user(username, email, password, height, weight, birthday):
 
 def check_authentication():
     if st.session_state.get('authenticated', False):
-        st.sidebar.success(f"You are logged in as {st.session_state.get('username', '')}")
+        st.sidebar.success(f"Du bist eingeloggt als {st.session_state.get('username', '')}")
     else:
-        st.sidebar.info("Please log in to access the app.")
+        st.sidebar.info("Bitte logge dich ein, um die App zu nutzen.")
         st.stop()
