@@ -20,7 +20,7 @@ def pain_entry():
         
         pain_strength = st.select_slider(
             "Wie stark ist dein Schmerz?",
-            options=["leicht", "mittel", "stark"],
+            options=[1, 2, 3],
             help="Bewerte deinen Schmerz von leicht bis stark."
         )
 
