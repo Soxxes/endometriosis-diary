@@ -21,9 +21,11 @@ def login_register():
         col1, col2 = st.columns([4, 1])
         with col1:
             if st.button("Login"):
-                if authenticate_user(username, password):
+                authenticated, user_id = authenticate_user(username, password)
+                if authenticated:
                     st.session_state['authenticated'] = True
                     st.session_state['username'] = username
+                    st.session_state['user_id'] = user_id
                     st.sidebar.success("Du bist eingeloggt!")
                     # st.rerun()
                 else:
@@ -43,7 +45,6 @@ def login_register():
         weight = st.number_input("Gewicht (kg)", min_value=0.0)
         birthday = st.date_input("Geburtsdatum",
                                 min_value=datetime.strptime("01.01.1930", "%d.%m.%Y"),
-                                max_value=datetime.strptime("01.01.2024", "%d.%m.%Y"),
                                 format="DD.MM.YYYY").strftime("%Y-%m-%d")
 
         if st.button("Bestätigen"):
