@@ -7,10 +7,9 @@ def authenticate_user(username, password):
     credentials = {"username": username, "password": password}
     
     response = requests.post(api_url, json=credentials)
-    
     if response.status_code == 200:
-        return True
-    return False
+        return True, response.json().get("user_id")
+    return False, None
 
 def register_user(username, email, password, height, weight, birthday):
     api_url = "http://localhost:5000/api/users/add"
