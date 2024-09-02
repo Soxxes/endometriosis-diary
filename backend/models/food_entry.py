@@ -54,7 +54,7 @@ class FoodEntry:
     def save(self):
         result = mongo.db.foodEntries.find_one({
             "user_id": self.user_id,
-            "date": self.date
+            "meal_time_stamp": self.meal_time_stamp
         })
         if result:
             # wrong method called, use update instead
@@ -79,10 +79,10 @@ class FoodEntry:
         return mongo.db.foodEntries.find_one({"_id": ObjectId(foodEntry_id)})
 
     @staticmethod
-    def get_by_user_and_date(user_id, date):
+    def get_by_user_and_meal_time_stamp(user_id, meal_time_stamp):
         return mongo.db.foodEntries.find_one({
             "user_id": user_id,
-            "date": date
+            "meal_time_stamp": meal_time_stamp
         })
 
     @staticmethod

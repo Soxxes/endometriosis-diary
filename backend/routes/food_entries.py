@@ -18,7 +18,7 @@ def add_food_entry():
             else:
                 nutritions[nut] = value
     data["nutritions"] = nutritions
-    
+
     try:
         validated_data, errors = FoodEntry.validate(data)
         if errors:
@@ -39,14 +39,14 @@ def add_food_entry():
 def get_food_entry():
     data = request.json
     user_id = data['user_id']
-    date = data['date']
+    meal_time_stamp = data['meal_time_stamp']
 
-    if not user_id or not date:
-        return jsonify({"error": "user_id and date are required"}), 400
+    if not user_id or not meal_time_stamp:
+        return jsonify({"error": "user_id and meal_time_stamp are required"}), 400
 
     try:
-        date_obj = datetime.strptime(date, "%Y-%m-%d")
-        food_entry = FoodEntry.get_by_user_and_date(user_id, date_obj)
+        meal_time_stamp_obj = datetime.strptime(meal_time_stamp, "%Y-%m-%d")
+        food_entry = FoodEntry.get_by_user_and_meal_time_stamp(user_id, meal_time_stamp_obj)
         
         if not food_entry:
             return jsonify({"message": "Food entry not found"}), 404
