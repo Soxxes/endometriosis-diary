@@ -18,17 +18,20 @@ def login_register():
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
 
-        if st.button("Login"):
-            if authenticate_user(username, password):
-                st.session_state['authenticated'] = True
-                st.session_state['username'] = username
-                st.sidebar.success("Du bist eingeloggt!")
-                # st.rerun()
-            else:
-                st.session_state['authenticated'] = False
-                st.error("Ungültige Benutzerdaten")
-        
-        st.button("Registrieren", on_click=toggle_mode)
+        col1, col2 = st.columns([4, 1])
+        with col1:
+            if st.button("Login"):
+                if authenticate_user(username, password):
+                    st.session_state['authenticated'] = True
+                    st.session_state['username'] = username
+                    st.sidebar.success("Du bist eingeloggt!")
+                    # st.rerun()
+                else:
+                    st.session_state['authenticated'] = False
+                    st.error("Ungültige Benutzerdaten")
+
+        with col2:
+            st.button("Registrieren", on_click=toggle_mode)
 
     else:
         st.title("Registrierung")
