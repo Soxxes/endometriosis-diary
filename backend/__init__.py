@@ -1,6 +1,6 @@
 from flask import Flask
 from backend.extensions import mongo
-from backend.routes import main
+from backend.routes import users_bp, foods_bp, food_entries_bp
 
 
 def create_flask_app():
@@ -13,6 +13,8 @@ def create_flask_app():
     mongo.init_app(app)
 
     # register Blueprints
-    app.register_blueprint(main, url_prefix="/api/users")
+    app.register_blueprint(users_bp, url_prefix="/api/users")
+    app.register_blueprint(foods_bp, url_prefix="/api/foods")
+    app.register_blueprint(food_entries_bp, url_prefix="/api/foodEntries")
 
     return app
