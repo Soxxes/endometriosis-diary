@@ -11,6 +11,47 @@ load_dotenv()
 
 api = off.API(user_agent="Test/1.0")
 
+# FatSecret API credentials
+client_id = os.environ["FATSECRET_CLIENT_ID"]
+client_secret = os.environ["FATSECRET_CLIENT_SECRET"]
+
+# OAuth2.0 Token URL
+token_url = 'https://oauth.fatsecret.com/connect/token'
+
+
+def get_access_token(client_id, client_secret):
+    response = requests.post(
+        token_url,
+        auth=HTTPBasicAuth(client_id, client_secret),
+        data={'grant_type': 'client_credentials'}
+    )
+
+    if response.status_code == 200:
+        return response.json().get('access_token')
+    else:
+        print(f"Failed to get access token: {response.status_code}, {response.text}")
+        return None
+    
+access_token = get_access_token(client_id, client_secret)
+
+def search_foods(query):
+    base_url = 'https://platform.fatsecret.com/rest/server.api'
+    headers = {
+        'Authorization': f'Bearer {access_token}'
+    }
+    params = {
+        'method': 'foods.search',
+        'format': 'json',
+        'search_expression': query,
+        'max_results': 10
+    }
+
+    response = requests.get(base_url, headers=headers, params=params)
+    if response.status_code == 200:
+        return response.json().get('foods', {}).get('food', [])
+    else:
+        print(f"Error {response.status_code}: {response.text}")
+        return []
 
 def search_foods(query):
     # api_url = f"http://localhost:5000/api/foods/search?query={query}"
