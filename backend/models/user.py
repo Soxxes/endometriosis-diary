@@ -10,8 +10,7 @@ class UserSchema(Schema):
     password = fields.String(required=True, validate=validate.Length(min=8))
     height = fields.Float(required=True, validate=validate.Range(min=0))
     weight = fields.Float(required=True, validate=validate.Range(min=0))
-    # TODO: make date field
-    birthday = fields.String(required=True)
+    birthday = fields.DateTime(format="%Y-%m-%d", required=True)
 
 user_schema = UserSchema()
 
