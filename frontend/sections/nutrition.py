@@ -27,6 +27,7 @@ def get_access_token(client_id, client_secret):
     )
 
     if response.status_code == 200:
+        print("Success")
         return response.json().get('access_token')
     else:
         print(f"Failed to get access token: {response.status_code}, {response.text}")
@@ -43,25 +44,48 @@ def search_foods(query):
         'method': 'foods.search',
         'format': 'json',
         'search_expression': query,
+        # only in foods.search.v3
+        #'region': 'DE',
         'max_results': 10
     }
 
     response = requests.get(base_url, headers=headers, params=params)
     if response.status_code == 200:
+        print(response.json())
+        return response.json().get('foods', {}).get('food', [])
+    else:
+        print(f"Error {response.status_code}: {response.text}")
+        return []
+    
+
+def get_food(food_id):
+    base_url = 'https://platform.fatsecret.com/rest/server.api'
+    headers = {
+        'Authorization': f'Bearer {access_token}'
+    }
+    params = {
+        'method': 'food.get.v4',
+        'format': 'json',
+        'food_id': food_id
+    }
+
+    response = requests.get(base_url, headers=headers, params=params)
+    if response.status_code == 200:
+        print(response.json())
         return response.json().get('foods', {}).get('food', [])
     else:
         print(f"Error {response.status_code}: {response.text}")
         return []
 
-def search_foods(query):
-    # api_url = f"http://localhost:5000/api/foods/search?query={query}"
-    # response = requests.get(api_url)
-    # if response.status_code == 200:
-    #     return response.json().get("results", [])
-    # return []
-    result = api.product.text_search(query)
-    # print(len(result.get("products")))
-    return result.get("products")[:15]
+# def search_foods(query):
+#     # api_url = f"http://localhost:5000/api/foods/search?query={query}"
+#     # response = requests.get(api_url)
+#     # if response.status_code == 200:
+#     #     return response.json().get("results", [])
+#     # return []
+#     result = api.product.text_search(query)
+#     # print(len(result.get("products")))
+#     return result.get("products")[:15]
 
 def dummy_search_foods(query):
     return [
@@ -131,13 +155,17 @@ def nutrition_entry():
 
         if search_results:
             food_options = {
-                f"{result['product_name']}": result['nutriments']
+                f"{result['food_name']}": result['food_id']
                 for result in search_results
             }
 
             # selectbox for the user to choose one or more foods
             selected_food = st.selectbox("Wähle ein Lebensmittel", food_options.keys())
             nutritions = food_options[selected_food]
+
+            food_id = food_options[selected_food]
+            print("_"*20)
+            print(get_food(food_id))
 
             col1, col2 = st.columns([2, 1])
             with col1:
